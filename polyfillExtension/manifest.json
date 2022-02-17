@@ -3,11 +3,11 @@
   "version": "0.1",
   "name": "Test webeExtension api",
   "permissions": ["tabs", "cookies", "*://vifrac.com/*", "*://*.platzi.com/*"],
-  "background": { "scripts": ["./background.js"] },
+  "background": { "scripts": ["./browser-polyfill.js", "./background.js"] },
   "content_scripts": [
     {
       "matches": ["*://*/*"],
-      "js": ["./content_scripts/testApi.js"]
+      "js": ["./browser-polyfill.js", "./content_scripts/testApi.js"]
     }
   ]
 }
