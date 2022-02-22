@@ -1,0 +1,17 @@
+{
+  "manifest_version": 2,
+  "version": "0.1",
+  "name": "Learning productivity tool",
+  "icons": {
+    "48": "./images/icons/icon-ruler-32-48.png",
+    "96": "./images/icons/icon-ruler-32-96.png"
+  },
+  "browser_action": {
+    "default_icon": {
+      "16": "./images/icons/icon-ruler-32-16.png",
+      "32": "./images/icons/icon-ruler-32-32.png"
+    },
+    "default_title": "Learning productivity tool",
+    "default_popup": "./popup/toolCapture.html"
+  }
+}
