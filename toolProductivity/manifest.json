@@ -13,5 +13,12 @@
     },
     "default_title": "Learning productivity tool",
     "default_popup": "./popup/toolCapture.html"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.platzi.com/*"],
+      "js": ["./constent_scripts/extractDataLesson.js"]
+    }
+  ],
+  "permissions": ["tabs", "storage"]
 }

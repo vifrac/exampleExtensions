@@ -1,0 +1,52 @@
+* {
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+
+.popup-body {
+  width: 333px;
+  height: 455px;
+  background-color: blue;
+}
+
+.toolCapture-header {
+  margin-top: 2%;
+  margin-right: 2%;
+  margin-left: 2%;
+  width: 96%;
+  height: 20%;
+  background-color: red;
+}
+
+.toolCapture-nav {
+  margin-top: 2%;
+  margin-right: 2%;
+  margin-left: 2%;
+  width: 96%;
+  height: 10%;
+  background-color: red;
+}
+
+.toolCapture-main {
+  margin-top: 2%;
+  margin-right: 2%;
+  margin-left: 2%;
+  width: 96%;
+  height: 54%;
+  background-color: red;
+}
+
+.toolCapture-footer {
+  margin-top: 2%;
+  margin-right: 2%;
+  margin-left: 2%;
+  margin-bottom: 2%;
+  width: 96%;
+  height: 10%;
+  background-color: red;
+}
+
+.error {
+  display: none;
+}

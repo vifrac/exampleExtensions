@@ -4,10 +4,76 @@
     <meta charset="UTF-8" />
     <title>Learning productivity tool</title>
     <link rel="stylesheet" href="./toolCapture.css" />
-    <script type="application/javascript" src="../browser-polyfill.js"></script>
-    <script type="application/javascript" src="./toolCapture.js"></script>
+    <!-- <script type="application/javascript" src="../browser-polyfill.js"></script>
+    <script type="application/javascript" src="./toolCapture.js"></script> -->
   </head>
-  <body>
-    <h1>helllo</h1>
+  <body class="popup-body">
+    <header class="toolCapture-header">header</header>
+    <nav class="toolCapture-nav">
+      <button class="browser-style">Youtube</button>
+      <button class="browser-style">Codigo Facilito</button>
+      <button class="browser-style">Platzi</button>
+    </nav>
+    <main class="toolCapture-main">
+      <form>
+        <div class="topic" id="topic">
+          <label for="topic">Topics</label>
+          <select name="topic" id="topic">
+            <option value="Angular">Angular</option>
+            <option value="NodeJs">NodeJs</option>
+            <option value="Javascript">Javascript</option>
+            <option value="Web extension">Web extension</option>
+          </select>
+        </div>
+        <div>
+          <label for="lesson">Lesson:</label>
+          <input type="text" id="lesson" name="lesson" />
+        </div>
+
+        <div id="duration_video">
+          <label for="duration_video">Duration lesson:</label>
+          <input type="text" id="duration_video" name="duration_video" />
+        </div>
+
+        <div>
+          <label for="start_lesson">Start lesson:</label>
+          <input type="datetime" id="start_lesson" name="start_lesson" />
+        </div>
+
+        <div id="end_lesson">
+          <label for="end_lesson">End lesson:</label>
+          <input type="datetime" id="end_lesson" name="end_lesson" />
+        </div>
+
+        <div id="end_comments">
+          <label for="end_comments">End comments:</label>
+          <input type="datetime" id="end_comments" name="end_comments" />
+        </div>
+
+        <div class="button">
+          <button type="reset">Cancel</button>
+        </div>
+
+        <div class="button">
+          <button type="submit">Send</button>
+        </div>
+        <div class="button" id="start_lesson">ff</div>
+        <div class="button" id="lesson">ff</div>
+      </form>
+    </main>
+    <footer class="toolCapture-footer">
+      <button class="browser-style">Start lesson</button>
+      <button class="browser-style">End lesson</button>
+      <button class="browser-style">End comments</button>
+      <div class="error" id="error">
+        <div class="error-alert text-center">
+          <p class="text-center">
+            Estas en
+            <b id="current-website"></b>
+          </p>
+        </div>
+      </div>
+    </footer>
+    <script src="./toolCapture.js"></script>
   </body>
 </html>
