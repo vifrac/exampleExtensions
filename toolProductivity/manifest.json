@@ -6,6 +6,14 @@
     "48": "./images/icons/icon-ruler-32-48.png",
     "96": "./images/icons/icon-ruler-32-96.png"
   },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "toolproductivity@addon.org"
+    }
+  },
+  "background": {
+    "scripts": ["./background_scripts/background.js"]
+  },
   "browser_action": {
     "default_icon": {
       "16": "./images/icons/icon-ruler-32-16.png",
@@ -17,8 +25,15 @@
   "content_scripts": [
     {
       "matches": ["*://*.platzi.com/*"],
-      "js": ["./constent_scripts/extractDataLesson.js"]
+      "js": ["./content_scripts/extractDataLesson.js"]
     }
   ],
-  "permissions": ["tabs", "storage"]
+  "permissions": ["notifications", "tabs", "storage", "downloads"],
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Ctrl+Alt+Y"
+      }
+    }
+  }
 }

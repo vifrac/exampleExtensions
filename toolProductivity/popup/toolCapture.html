@@ -12,7 +12,7 @@
     <nav class="toolCapture-nav">
       <button class="browser-style">Youtube</button>
       <button class="browser-style">Codigo Facilito</button>
-      <button class="browser-style">Platzi</button>
+      <button id="platzi-button" class="browser-style">Platzi</button>
     </nav>
     <main class="toolCapture-main">
       <form>
@@ -26,31 +26,55 @@
           </select>
         </div>
         <div>
+          <label for="course">course:</label>
+          <input type="text" id="course" name="course" />
+        </div>
+        <div>
           <label for="lesson">Lesson:</label>
           <input type="text" id="lesson" name="lesson" />
         </div>
 
-        <div id="duration_video">
+        <div>
           <label for="duration_video">Duration lesson:</label>
-          <input type="text" id="duration_video" name="duration_video" />
+          <input type="time" id="duration_video" name="duration_video" />
+          <button id="duration_video-update-button" class="browser-style btnUpdate">
+            &#8635
+          </button>
         </div>
 
         <div>
           <label for="start_lesson">Start lesson:</label>
-          <input type="datetime" id="start_lesson" name="start_lesson" />
+          <input type="time" id="start_lesson" name="start_lesson" />
+          <button id="start_lesson-update-button" class="browser-style btnUpdate">
+            &#8635
+          </button>
         </div>
 
-        <div id="end_lesson">
+        <div>
           <label for="end_lesson">End lesson:</label>
-          <input type="datetime" id="end_lesson" name="end_lesson" />
+          <input type="time" id="end_lesson" name="end_lesson" />
+          <button id="end_lesson-update-button" class="browser-style btnUpdate">
+            &#8635
+          </button>
         </div>
 
-        <div id="end_comments">
+        <div>
           <label for="end_comments">End comments:</label>
-          <input type="datetime" id="end_comments" name="end_comments" />
+          <input type="time" id="end_comments" name="end_comments" />
+          <button id="end_comments-update-button" class="browser-style btnUpdate">
+            &#8635
+          </button>
         </div>
 
-        <div class="button">
+        <div>
+          <label for="comments">Comments:</label>
+          <input type="text" id="comments" name="comments" />
+          <button id="comments-update-button" class="browser-style btnUpdate">
+            &#8635
+          </button>
+        </div>
+
+        <!-- <div class="button">
           <button type="reset">Cancel</button>
         </div>
 
@@ -58,13 +82,19 @@
           <button type="submit">Send</button>
         </div>
         <div class="button" id="start_lesson">ff</div>
-        <div class="button" id="lesson">ff</div>
+        <div class="button" id="lesson">ff</div> -->
       </form>
     </main>
     <footer class="toolCapture-footer">
-      <button class="browser-style">Start lesson</button>
-      <button class="browser-style">End lesson</button>
-      <button class="browser-style">End comments</button>
+      <button id="startLesson-button" class="browser-style">
+        Start lesson
+      </button>
+      <button id="endLesson-button" class="browser-style">End lesson</button>
+      <button id="endComments-button" class="browser-style">
+        End comments
+      </button>
+      <button id="test-button" class="browser-style">test</button>
+      <button id="save-button" class="browser-style">save</button>
       <div class="error" id="error">
         <div class="error-alert text-center">
           <p class="text-center">

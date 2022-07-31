@@ -50,3 +50,7 @@
 .error {
   display: none;
 }
+
+.btnUpdate {
+  font-weight: bold;
+}
