@@ -24,7 +24,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://*.platzi.com/*"],
+      "matches": ["*://*.platzi.com/clases/*"],
       "js": ["./content_scripts/extractDataLesson.js"]
     }
   ],

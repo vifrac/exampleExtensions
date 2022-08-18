@@ -1,7 +1,13 @@
+let currentUrl;
+function getCurrentWindowTabsA() {
+  return browser.tabs.query({ currentWindow: true });
+}
+
 function openMyPage() {
   function getCurrentWindowTabs() {
     return browser.tabs.query({ currentWindow: true });
   }
+
   let tabIsActive = false;
 
   getCurrentWindowTabs().then((tabs) => {
@@ -19,6 +25,9 @@ function openMyPage() {
         url: 'https://platzi.com/clases/2920-javascript-testing/47892-que-es-el-testing/',
       });
     }
+
+    // let tabActive = tabs.find((element) => element.active === true);
+    // currentUrl = tabActive.url.replace('https://platzi.com/clases', '');
   });
 }
 openMyPage();
@@ -73,242 +82,231 @@ function splitTime(time) {
   // return dataForLesson.durationVideo;
 }
 
-function notifyExtension(e) {
-  switch (e.target.id) {
-    case 'start_lesson-update-button':
-      dataForLesson.updateTime = document.getElementById('start_lesson').value;
-      break;
-    case 'end_lesson-update-button':
-      dataForLesson.updateTime = document.getElementById('end_lesson').value;
-      break;
-    case 'end_comments-update-button':
-      dataForLesson.updateTime = document.getElementById('end_comments').value;
-      break;
-    case 'comments-update-button':
-      dataForLesson.comments = document.getElementById('comments').value;
-      break;
-    default:
-      break;
+(() => {
+  function notifyExtension(e) {
+    console.log(e);
+
+    if (e) {
+      console.log('hi');
+      switch (e.target.id) {
+        case 'start_lesson-update-button':
+          dataForLesson.updateTime =
+            document.getElementById('start_lesson').value;
+          break;
+        case 'end_lesson-update-button':
+          dataForLesson.updateTime =
+            document.getElementById('end_lesson').value;
+          break;
+        case 'end_comments-update-button':
+          dataForLesson.updateTime =
+            document.getElementById('end_comments').value;
+          break;
+        case 'comments-update-button':
+          dataForLesson.comments = document.getElementById('comments').value;
+          break;
+        default:
+          break;
+      }
+    }
+
+    browser.runtime.sendMessage(
+      { method: e.target.id, dataForLesson, currentUrl },
+      function (res) {
+        //console.log(res.data);
+        dataForLesson = res.data;
+
+        document.getElementById('course').value = dataForLesson.course;
+        document.getElementById('lesson').value = dataForLesson.lesson;
+
+        document.getElementById('duration_video').value =
+          getHoursMinutesSeconds(dataForLesson.durationVideo);
+
+        document.getElementById('start_lesson').value = getHoursMinutesSeconds(
+          dataForLesson.startLesson
+        );
+
+        document.getElementById('end_lesson').value = getHoursMinutesSeconds(
+          dataForLesson.endLesson
+        );
+
+        document.getElementById('end_comments').value = getHoursMinutesSeconds(
+          dataForLesson.endComments
+        );
+
+        document.getElementById('comments').value = dataForLesson.comments;
+
+        return true;
+      }
+    );
   }
 
-  browser.runtime.sendMessage(
-    { method: e.target.id, dataForLesson },
-    function (res) {
-      //console.log(res.data);
-      dataForLesson = res.data;
+  document
+    .getElementById('platzi-button')
+    .addEventListener('click', notifyExtension);
 
-      document.getElementById('course').value = dataForLesson.course;
-      document.getElementById('lesson').value = dataForLesson.lesson;
+  document
+    .getElementById('duration_video-update-button')
+    .addEventListener('click', notifyExtension);
 
-      document.getElementById('duration_video').value = getHoursMinutesSeconds(
-        dataForLesson.durationVideo
-      );
+  document
+    .getElementById('startLesson-button')
+    .addEventListener('click', notifyExtension);
 
-      document.getElementById('start_lesson').value = getHoursMinutesSeconds(
-        dataForLesson.startLesson
-      );
+  document
+    .getElementById('start_lesson-update-button')
+    .addEventListener('click', notifyExtension);
 
-      document.getElementById('end_lesson').value = getHoursMinutesSeconds(
-        dataForLesson.endLesson
-      );
+  document
+    .getElementById('endLesson-button')
+    .addEventListener('click', notifyExtension);
 
-      document.getElementById('end_comments').value = getHoursMinutesSeconds(
-        dataForLesson.endComments
-      );
+  document
+    .getElementById('end_lesson-update-button')
+    .addEventListener('click', notifyExtension);
 
-      document.getElementById('comments').value = dataForLesson.comments;
+  document
+    .getElementById('endComments-button')
+    .addEventListener('click', notifyExtension);
 
-      return true;
-    }
-  );
-}
+  document
+    .getElementById('end_comments-update-button')
+    .addEventListener('click', notifyExtension);
 
-document
-  .getElementById('platzi-button')
-  .addEventListener('click', notifyExtension);
+  document
+    .getElementById('comments-update-button')
+    .addEventListener('click', notifyExtension);
 
-document
-  .getElementById('duration_video-update-button')
-  .addEventListener('click', notifyExtension);
+  document
+    .getElementById('test-button')
+    .addEventListener('click', notifyExtension);
 
-document
-  .getElementById('startLesson-button')
-  .addEventListener('click', notifyExtension);
+  document
+    .getElementById('save-button')
+    .addEventListener('click', notifyExtension);
 
-document
-  .getElementById('start_lesson-update-button')
-  .addEventListener('click', notifyExtension);
+  // notifyExtension(e);
 
-document
-  .getElementById('endLesson-button')
-  .addEventListener('click', notifyExtension);
+  // function notifyExtension(e) {
+  //   if (e.target.tagName != 'A') {
+  //     return;
+  //   }
+  //   //console.log('testnotification');
+  //   browser.runtime.sendMessage({ url: e.target.href });
+  // }
 
-document
-  .getElementById('end_lesson-update-button')
-  .addEventListener('click', notifyExtension);
+  // function handleResponse(message) {
+  //   //console.log(`Message from the background script:  ${message.response}`);
+  // }
 
-document
-  .getElementById('endComments-button')
-  .addEventListener('click', notifyExtension);
+  // function handleError(error) {
+  //   //console.log(`Error: ${error}`);
+  // }
 
-document
-  .getElementById('end_comments-update-button')
-  .addEventListener('click', notifyExtension);
+  // function notifyBackgroundPage(e) {
+  //   let sending = browser.runtime.sendMessage({
+  //     greeting: 'Greeting from the content script from vifrac',
+  //   });
+  //   sending.then(handleResponse, handleError);
+  // }
 
-document
-  .getElementById('comments-update-button')
-  .addEventListener('click', notifyExtension);
+  // window.addEventListener('click', notifyBackgroundPage);
+  // document
+  //   .getElementById('platzi-button')
+  //   .addEventListener('click', notifyBackgroundPage);
 
-document
-  .getElementById('test-button')
-  .addEventListener('click', notifyExtension);
+  // document.getElementById('platzi-button').addEventListener('click', function () {
+  //   alert(132);
+  //   browser.runtime.sendMessage({
+  //     action: 'notify',
+  //   });
+  // });
 
-document
-  .getElementById('save-button')
-  .addEventListener('click', notifyExtension);
+  // var App = App || {};
+  // window.browser = (function () {
+  //   return window.msBrowser || window.browser || window.chrome;
+  // })();
 
-// document.getElementById('save-button').addEventListener('click', saveJSON);
+  // App.popup = (() => {
+  //   function init() {
+  //     getCurrentTime();
+  //     addEventHandlers();
+  //     validateWebsite();
+  //     insertData();
+  //   }
 
-// function saveJSON() {
-//   //console.log('saveJson');
-//   //console.log(dataForLesson.startLesson);
-//   //console.log(dataForLesson.startLesson != undefined);
-//   if (dataForLesson.startLesson != undefined) {
-//     let pathFile = 'storageToolProductivity/';
-//     let fileName = pathFile + dataForLesson.startLesson + '.json';
-//     // Create a blob of the data
-//     // var fileToSave = new Blob([JSON.stringify(dataForLesson)], {
-//     //   type: 'application/json',
-//     // });
-//     // // Save the file
-//     // saveAs(fileToSave, fileName);
-//     // //console.log(JSON.stringify(dataForLesson, undefined, 2));
-//     browser.downloads.download({
-//       url: URL.createObjectURL(
-//         new Blob([JSON.stringify(dataForLesson)], {
-//           type: 'application/binary',
-//         })
-//       ),
-//       filename: fileName,
-//       conflictAction: 'uniquify',
-//     });
-//     // window.open(
-//     //   URL.createObjectURL(
-//     //     new Blob([JSON.stringify(dataForLesson)], {
-//     //       type: 'application/binary',
-//     //     })
-//     //   )
-//     // );
-//     //console.log(fileName);
-//   } else {
-//     //console.log('startlesson sin data');
-//   }
-// }
+  //   function getCurrentTime() {
+  //     let learningSession = {
+  //       platform: '',
+  //       topic: '',
+  //       linkLesson: '',
+  //       leson: '',
+  //       dutarionVideo: '',
+  //       startLesson: '',
+  //       endLesson: '',
+  //       endComments: '',
+  //     };
 
-// function notifyExtension(e) {
-//   if (e.target.tagName != 'A') {
-//     return;
-//   }
-//   //console.log('testnotification');
-//   browser.runtime.sendMessage({ url: e.target.href });
-// }
+  //     const currentTime = new Date();
+  //     document.getElementById('start_lesson').value = currentTime;
+  //     document.getElementById('lesson').value = 'title of lesson';
+  //   }
 
-// function handleResponse(message) {
-//   //console.log(`Message from the background script:  ${message.response}`);
-// }
+  //   function addEventHandlers() {
+  //     // const logoEl = document.getElementById('logo-item');
+  //     // logoEl.addEventListener('click', function () {
+  //     //   window.open('https://codigofacilito.com/', '_blanck');
+  //     // });
+  //     // const linkEl = document.getElementById('goto-courses');
+  //     // linkEl.addEventListener('click', function () {
+  //     //   window.open('https://codigofacilito.com/courses', '_blanck');
+  //     // });
+  //   }
 
-// function handleError(error) {
-//   //console.log(`Error: ${error}`);
-// }
+  //   function validateWebsite() {
+  //     const errorDiv = document.getElementById('error');
+  //     const currentWeb = document.getElementById('current-website');
+  //     browser.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
+  //       let url = tabs[0].url;
+  //       //console.log(url, ' - ', url.includes('platzi'));
+  //       if (url.includes('platzi')) {
+  //         errorDiv.className = '';
+  //       } else {
+  //         errorDiv.className = 'error';
+  //       }
+  //       currentWeb.innerHTML = url;
+  //     });
+  //   }
 
-// function notifyBackgroundPage(e) {
-//   let sending = browser.runtime.sendMessage({
-//     greeting: 'Greeting from the content script from vifrac',
-//   });
-//   sending.then(handleResponse, handleError);
-// }
+  //   function insertData() {
+  //     let learningSession = {
+  //       platform: '',
+  //       topic: '',
+  //       course: '',
+  //       linkLesson: '',
+  //       leson: '',
+  //       dutarionVideo: '',
+  //       startLesson: '',
+  //       endLesson: '',
+  //       endComments: '',
+  //     };
+  //   }
 
-// window.addEventListener('click', notifyBackgroundPage);
-// document
-//   .getElementById('platzi-button')
-//   .addEventListener('click', notifyBackgroundPage);
+  //   init();
+  // })();
 
-// document.getElementById('platzi-button').addEventListener('click', function () {
-//   alert(132);
-//   browser.runtime.sendMessage({
-//     action: 'notify',
-//   });
-// });
+  function init() {
+    // let currentUrl = openMyPage();
+    // console.log(currentUrl);
+    started = { target: { id: 'platzi-button' } };
+    // console.log(started.target);
+    getCurrentWindowTabsA().then((res, rej) => {
+      tabs = res;
+      tabActive = tabs.find((element) => element.active === true);
+      currentUrl = tabActive.url.replace('https://platzi.com/clases', '');
+      started.target.test = currentUrl;
+      notifyExtension(started);
+    });
+  }
 
-// var App = App || {};
-// window.browser = (function () {
-//   return window.msBrowser || window.browser || window.chrome;
-// })();
-
-// App.popup = (() => {
-//   function init() {
-//     getCurrentTime();
-//     addEventHandlers();
-//     validateWebsite();
-//     insertData();
-//   }
-
-//   function getCurrentTime() {
-//     let learningSession = {
-//       platform: '',
-//       topic: '',
-//       linkLesson: '',
-//       leson: '',
-//       dutarionVideo: '',
-//       startLesson: '',
-//       endLesson: '',
-//       endComments: '',
-//     };
-
-//     const currentTime = new Date();
-//     document.getElementById('start_lesson').value = currentTime;
-//     document.getElementById('lesson').value = 'title of lesson';
-//   }
-
-//   function addEventHandlers() {
-//     // const logoEl = document.getElementById('logo-item');
-//     // logoEl.addEventListener('click', function () {
-//     //   window.open('https://codigofacilito.com/', '_blanck');
-//     // });
-//     // const linkEl = document.getElementById('goto-courses');
-//     // linkEl.addEventListener('click', function () {
-//     //   window.open('https://codigofacilito.com/courses', '_blanck');
-//     // });
-//   }
-
-//   function validateWebsite() {
-//     const errorDiv = document.getElementById('error');
-//     const currentWeb = document.getElementById('current-website');
-//     browser.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
-//       let url = tabs[0].url;
-//       //console.log(url, ' - ', url.includes('platzi'));
-//       if (url.includes('platzi')) {
-//         errorDiv.className = '';
-//       } else {
-//         errorDiv.className = 'error';
-//       }
-//       currentWeb.innerHTML = url;
-//     });
-//   }
-
-//   function insertData() {
-//     let learningSession = {
-//       platform: '',
-//       topic: '',
-//       course: '',
-//       linkLesson: '',
-//       leson: '',
-//       dutarionVideo: '',
-//       startLesson: '',
-//       endLesson: '',
-//       endComments: '',
-//     };
-//   }
-
-//   init();
-// })();
+  init();
+})();

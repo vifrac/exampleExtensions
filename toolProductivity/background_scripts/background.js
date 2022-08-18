@@ -1,4 +1,20 @@
+const arrayLearningSession = [];
 let learningSession = {};
+
+function searchLesson(lesson) {
+  // console.log(arrayLearningSession);
+  let existsLesson = arrayLearningSession.find(
+    (element) => element.id === lesson
+  );
+  learningSession = existsLesson;
+}
+
+// function updateLesson(lesson) {
+//   let existsLesson = arrayLearningSession.findIndex(
+//     (element) => element.id === lesson
+//   );
+//   console.log(existsLesson);
+// }
 
 function currentTime() {
   let time = Date.now();
@@ -27,7 +43,7 @@ function splitTime(time, target, option) {
       break;
 
     default:
-      console.log(timeSplit);
+      // console.log(timeSplit);
       break;
   }
 
@@ -68,24 +84,41 @@ function splitTime(time, target, option) {
 }
 
 function OnMessage(request, sender, sendResponse) {
-  console.log(request, ' - ', sender.envType);
+  // console.log(request);
+  // console.log(sender.envType);
   // console.log(request.dataForLesson);
 
   switch (sender.envType) {
     case 'content_child':
       // console.log('Message from the content script: ' + request.greeting);
-      console.log(request.method);
+      // console.log(request.method);
 
       switch (request.method) {
         case 'lessonInformation':
-          learningSession = request.dataFromLesson;
+          // learningSession = request.dataFromLesson;
+          async function validateIfExistLesson(lesson) {
+            // console.log(lesson);
+            let existsLesson = await arrayLearningSession.find(
+              (element) => element.id === lesson.id
+            );
+            // console.log(existsLesson);
+            if (!existsLesson) {
+              await arrayLearningSession.push(request.dataFromLesson);
+              learningSession = request.dataFromLesson;
+            } else {
+              learningSession = existsLesson;
+            }
+          }
+
+          validateIfExistLesson(request.dataFromLesson);
+
           break;
 
         case 'lessonInformationUpdate':
           // learningSession = request.dataFromLesson;
-          console.log(request.dataFromLesson);
-          console.log(learningSession.linkLesson);
-          console.log(request.dataFromLesson.linkLesson);
+          // console.log(request.dataFromLesson);
+          // console.log(learningSession.linkLesson);
+          // console.log(request.dataFromLesson.linkLesson);
 
           if (
             learningSession.linkLesson === request.dataFromLesson.linkLesson &&
@@ -96,7 +129,7 @@ function OnMessage(request, sender, sendResponse) {
               request.dataFromLesson.durationVideo;
             learningSession.stringDurationVideo =
               request.dataFromLesson.stringDurationVideo;
-            console.log('update');
+            // console.log('update');
           }
 
           break;
@@ -114,7 +147,7 @@ function OnMessage(request, sender, sendResponse) {
 
       break;
     case 'addon_child':
-      //console.log(learningSession);
+      searchLesson(request.currentUrl);
       switch (request.method) {
         case 'startLesson-button':
           learningSession.startLesson = Date.now();
@@ -206,7 +239,8 @@ function OnMessage(request, sender, sendResponse) {
         default:
           break;
       }
-
+      // updateLesson(request.currentUrl);
+      // console.log(learningSession);
       sendResponse({
         method: 'method: + ' + request.method + ' info from back ',
         data: learningSession,
@@ -225,71 +259,3 @@ function OnMessage(request, sender, sendResponse) {
 }
 
 browser.runtime.onMessage.addListener(OnMessage);
-
-// // function handleMessage(request, sender, sendResponse) {
-// //   //console.log('Message from the content script: ' + request.greeting);
-// //   //console.log(request.dataFromLesson);
-// //   sendResponse({ response: 'Response from background script' });
-// // }
-
-// // browser.runtime.onMessage.addListener(handleMessage);
-
-// function getInfoFromLearningPlatform(request, sender, sendResponse) {
-//   if (request.method == 'getStatus') {
-//     //console.log(request.data);
-//     sendResponse({
-//       method: 'method:info from back ',
-//       data: 'data:info from back',
-//     });
-//   }
-// }
-// // browser.runtime.onMessage.addListener(getInfoFromLearningPlatform);
-
-// // browser.runtime.onMessage.addListener(notify);
-
-// // function notify(message) {
-// //   //console.log('testnotification bg');
-// //   browser.notifications.create({
-// //     type: 'basic',
-// //     iconUrl: browser.extension.getURL('link.png'),
-// //     title: 'You clicked a link!',
-// //     message: message.url,
-// //   });
-// // }
-
-// // function letsDoThis(data) {
-// //   browser.notifications.create({
-// //     type: 'basic',
-// //     title: 'ping',
-// //     mesagge: 'yes we did it',
-// //   });
-// // }
-
-// // browser.runtime.onMessage.addListener(letsDoThis);
-
-// // 'use strict';
-// // function onError(error) {
-// //   console.error(`Error: ${error}`);
-// // }
-
-// // function sendMessageToTabs(tabs) {
-// //   for (let tab of tabs) {
-// //     browser.tabs
-// //       .sendMessage(tab.id, { greeting: 'Hi from background script' })
-// //       .then((response) => {
-// //         //console.log('Message from the content script:');
-// //         //console.log(response.response);
-// //       })
-// //       .catch(onError);
-// //   }
-// // }
-
-// // browser.browserAction.onClicked.addListener(() => {
-// //   browser.tabs
-// //     .query({
-// //       currentWindow: true,
-// //       active: true,
-// //     })
-// //     .then(sendMessageToTabs)
-// //     .catch(onError);
-// // });

@@ -1,10 +1,12 @@
 let currentLessonUpdate = {
+  id: '',
   linkLesson: '',
   durationVideo: '',
   stringDurationVideo: '',
 };
 
 let learningSession = {
+  id: '',
   platform: '',
   topic: '',
   course: '',
@@ -109,6 +111,10 @@ function splitTime(time, option) {
       // )?.baseURI;
 
       learningSession.linkLesson = window.location.href;
+      learningSession.id = learningSession.linkLesson.replace(
+        'https://platzi.com/clases',
+        ''
+      );
 
       learningSession.startLesson = Date.now();
 
@@ -132,7 +138,7 @@ function splitTime(time, option) {
       }
 
       function notifyBackgroundPage(e) {
-        console.log(e);
+        // console.log(e);
         if (learningSession.stringDurationVideo != undefined) {
           splitTime(learningSession.stringDurationVideo, 'loadDataOrigin');
         }
@@ -154,8 +160,8 @@ function splitTime(time, option) {
             break;
         }
 
-        console.log(JSON.stringify(dataSession));
-        console.log(typeOfMethod);
+        // console.log(JSON.stringify(dataSession));
+        // console.log(typeOfMethod);
 
         // let dataSession = JSON.parse(JSON.stringify(learningSession));
         let sending = browser.runtime.sendMessage({
@@ -231,6 +237,11 @@ function splitTime(time, option) {
             // console.log('es....', isUpdateDurationVideo);
 
             if (isUpdateDurationVideo === 'isUpdatedDurationVideo') {
+              currentLessonUpdate.id = currentLinkLesson.replace(
+                'https://platzi.com/clases',
+                ''
+              );
+
               currentLessonUpdate.linkLesson = currentLinkLesson;
               currentLessonUpdate.stringDurationVideo =
                 stringDurationVideoUpdate;
@@ -254,20 +265,3 @@ function splitTime(time, option) {
     }
   }, 100);
 })();
-
-// console.clear();
-// let timeT = Date.now();
-// let time = new Date();
-// let timeNumber = time.getTime();
-// let timeString = new Date(timeNumber);
-// //console.log(time);
-// //console.log(timeNumber);
-// //console.log(timeString);
-// //console.log(timeT);
-
-// let hms = ([hour, minutes, seconds] = [
-//   time.getHours(),
-//   time.getMinutes(),
-//   time.getSeconds(),
-// ]);
-// //console.log(hms);
