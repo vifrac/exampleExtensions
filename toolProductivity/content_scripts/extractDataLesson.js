@@ -1,21 +1,28 @@
+let classesToExtract = {
+  courseInfo: ".Header-course-info",
+  courseName: ".BadgeWithText_BadgeWithText__A1bQb",
+  lessonName: ".MaterialHeading_MaterialHeading-title__RZY2U",
+  duration: ".vjs-duration-display",
+};
+
 let currentLessonUpdate = {
-  id: '',
-  linkLesson: '',
-  durationVideo: '',
-  stringDurationVideo: '',
+  id: "",
+  linkLesson: "",
+  durationVideo: "",
+  stringDurationVideo: "",
 };
 
 let learningSession = {
-  id: '',
-  platform: '',
-  topic: '',
-  course: '',
-  linkLesson: '',
-  lesson: '',
-  durationVideo: '',
-  stringDurationVideo: '',
-  startLesson: '',
-  comments: '',
+  id: "",
+  platform: "",
+  topic: "",
+  course: "",
+  linkLesson: "",
+  lesson: "",
+  durationVideo: "",
+  stringDurationVideo: "",
+  startLesson: "",
+  comments: "",
   takeNotes: false,
 };
 
@@ -31,16 +38,16 @@ function getHoursMinutesSeconds(time) {
     timeStamp.getMinutes(),
     timeStamp.getSeconds(),
   ]);
-  //console.log(hoursMinutesSeconds.join(':'));
-  return hoursMinutesSeconds.join(':');
+  console.log(hoursMinutesSeconds.join(":"));
+  return hoursMinutesSeconds.join(":");
 }
 
 function splitTime(time, option) {
   // console.log(time);
-  let timeSplit = time.split(':');
+  let timeSplit = time.split(":");
   switch (timeSplit.length) {
     case 2:
-      timeSplit.unshift('00');
+      timeSplit.unshift("00");
       break;
 
     case 3:
@@ -50,7 +57,7 @@ function splitTime(time, option) {
       break;
   }
 
-  let dateFromBegin = new Date('1/1/1970 00:00:00');
+  let dateFromBegin = new Date("1/1/1970 00:00:00");
   dateFromBegin.setHours(
     parseInt(timeSplit[0]),
     parseInt(timeSplit[1]),
@@ -58,12 +65,12 @@ function splitTime(time, option) {
   );
 
   switch (option) {
-    case 'loadDataOrigin':
+    case "loadDataOrigin":
       learningSession.durationVideo = dateFromBegin.getTime();
       break;
-    case 'updateDurationVideo':
+    case "updateDurationVideo":
       currentLessonUpdate.durationVideo = dateFromBegin.getTime();
-      return 'isUpdatedDurationVideo';
+      return "isUpdatedDurationVideo";
 
     default:
       break;
@@ -75,23 +82,24 @@ function splitTime(time, option) {
 
 (function () {
   let stateCheck = setInterval(() => {
-    if (document.readyState === 'complete') {
+    if (document.readyState === "complete") {
       clearInterval(stateCheck);
-      //console.log('document ready');
+      document.body.style.border = "5px solid green";
 
-      // //console.log(document.readyState === 'complete');
-      document.body.style.border = '5px solid green';
-
-      infoTest = document.querySelector('.vjs-big-play-button');
+      infoTest = document.querySelector(".vjs-duration-display").textContent;
+      infoTest1 = document.querySelector(
+        classesToExtract.lessonName
+      ).textContent;
       infoTest2 = document.querySelector(
-        '#vjs_video_3 > div.vjs-control-bar > button.vjs-play-control.vjs-control'
+        "#vjs_video_3 > div.vjs-control-bar > button.vjs-play-control.vjs-control"
       );
 
       //console.log(infoTest);
+      //console.log(infoTest1);
       //console.log(infoTest2);
 
       learningSession.course = document.querySelector(
-        '.Header-course-info-content a h2'
+        classesToExtract.courseName
       ).textContent;
 
       // learningSession.lesson = document.getElementsByClassName(
@@ -99,11 +107,11 @@ function splitTime(time, option) {
       // );
 
       learningSession.lesson = document.querySelector(
-        '.Header-class-title h1'
-      ).textContent;
+        classesToExtract.lessonName
+      ).firstChild.textContent;
 
       learningSession.stringDurationVideo = document.querySelector(
-        '.vjs-duration-display'
+        classesToExtract.duration
       )?.textContent;
 
       // learningSession.linkLesson = document.querySelector(
@@ -112,8 +120,8 @@ function splitTime(time, option) {
 
       learningSession.linkLesson = window.location.href;
       learningSession.id = learningSession.linkLesson.replace(
-        'https://platzi.com/clases',
-        ''
+        "https://platzi.com/home/clases",
+        ""
       );
 
       learningSession.startLesson = Date.now();
@@ -138,41 +146,43 @@ function splitTime(time, option) {
       }
 
       function notifyBackgroundPage(e) {
-        // console.log(e);
+        //console.log(e);
         if (learningSession.stringDurationVideo != undefined) {
-          splitTime(learningSession.stringDurationVideo, 'loadDataOrigin');
+          splitTime(learningSession.stringDurationVideo, "loadDataOrigin");
         }
 
         let dataObjectTranfer = {};
-        let dataSession = '';
-        let typeOfMethod = '';
+        let dataSession = "";
+        let typeOfMethod = "";
         switch (e) {
-          case 'loadDataOrigin':
+          case "loadDataOrigin":
             dataSession = JSON.parse(JSON.stringify(learningSession));
-            typeOfMethod = 'lessonInformation';
+            typeOfMethod = "lessonInformation";
             break;
-          case 'updateDurationVideo':
+          case "updateDurationVideo":
             dataSession = JSON.parse(JSON.stringify(currentLessonUpdate));
-            typeOfMethod = 'lessonInformationUpdate';
+            typeOfMethod = "lessonInformationUpdate";
             break;
 
           default:
             break;
         }
 
-        // console.log(JSON.stringify(dataSession));
+        //console.log(JSON.stringify(dataSession));
         // console.log(typeOfMethod);
 
         // let dataSession = JSON.parse(JSON.stringify(learningSession));
         let sending = browser.runtime.sendMessage({
-          greeting: 'Greeting from the content script',
+          greeting: "Greeting from the content script",
           dataFromLesson: dataSession,
           method: typeOfMethod,
         });
-        sending.then(handleResponse, handleError);
+        //sending.then(console.log("success", dataSession), console.error);
+        //sending.then(handleResponse, handleError);
+        sending.then();
       }
 
-      notifyBackgroundPage('loadDataOrigin');
+      notifyBackgroundPage("loadDataOrigin");
 
       function sendDurationVideo() {
         currentLinkLesson = window.location.href;
@@ -197,23 +207,23 @@ function splitTime(time, option) {
         }
 
         //validar que no origen no tenga tiempos en '0:0'
-        comparationTime = ['0', '00', '0:0', '0:00', '00:00', '00:00:00'];
+        comparationTime = ["0", "00", "0:0", "0:00", "00:00", "00:00:00"];
         compareTime = (element) => element === stringDurationVideoOrigin;
         videoOriginWithoutTime = comparationTime.some(compareTime);
 
         // extraer tiempo actual del video
         stringDurationVideoUpdate = document.querySelector(
-          '.vjs-duration-display'
+          ".vjs-duration-display"
         )?.textContent;
 
         // validar que el timepo tiene formato adecuado y es diferente del tiempo guardado previamente
         if (
           stringDurationVideoUpdate != undefined &&
-          stringDurationVideoUpdate.includes(':') &&
+          stringDurationVideoUpdate.includes(":") &&
           learningSession.stringDurationVideo !== stringDurationVideoUpdate
         ) {
           // console.log('tiene :');
-          stringDurationArray = stringDurationVideoUpdate.split(':');
+          stringDurationArray = stringDurationVideoUpdate.split(":");
 
           isNumber = (n) => (isNaN(n) ? 0 : n);
           stringDurationIsnumber = stringDurationArray.reduce(
@@ -231,35 +241,35 @@ function splitTime(time, option) {
             // 2. enviar solo ese dato para actualizar solo el tiempo del video
             isUpdateDurationVideo = splitTime(
               stringDurationVideoUpdate,
-              'updateDurationVideo'
+              "updateDurationVideo"
             );
 
             // console.log('es....', isUpdateDurationVideo);
 
-            if (isUpdateDurationVideo === 'isUpdatedDurationVideo') {
+            if (isUpdateDurationVideo === "isUpdatedDurationVideo") {
               currentLessonUpdate.id = currentLinkLesson.replace(
-                'https://platzi.com/clases',
-                ''
+                "https://platzi.com/clases",
+                ""
               );
 
               currentLessonUpdate.linkLesson = currentLinkLesson;
               currentLessonUpdate.stringDurationVideo =
                 stringDurationVideoUpdate;
-              notifyBackgroundPage('updateDurationVideo');
+              notifyBackgroundPage("updateDurationVideo");
             }
 
             // console.log(JSON.stringify(currentLessonUpdate));
           }
         } else {
           console.log(
-            'stringDurationVideoUpdate sin datos a actualizar',
+            "stringDurationVideoUpdate sin datos a actualizar",
             learningSession.stringDurationVideo,
             stringDurationVideoUpdate
           );
         }
       }
 
-      window.addEventListener('click', sendDurationVideo);
+      window.addEventListener("click", sendDurationVideo);
     } else {
       //console.log('document is not ready');
     }

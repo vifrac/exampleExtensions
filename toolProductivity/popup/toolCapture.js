@@ -1,3 +1,11 @@
+//console.log("toolCapture");
+let paths = {
+  rootUrl: "https://platzi.com",
+  courseUrl: "/curso",
+  lessonUrl: "/home/clases",
+  testLessonUrl: "/2920-javascript-testing/47892-que-es-el-testing/",
+};
+
 let currentUrl;
 function getCurrentWindowTabsA() {
   return browser.tabs.query({ currentWindow: true });
@@ -13,16 +21,15 @@ function openMyPage() {
   getCurrentWindowTabs().then((tabs) => {
     for (let tab of tabs) {
       if (!tabIsActive) {
-        tabIsActive =
-          // tab.url ==
-          // 'https://platzi.com/clases/2920-javascript-testing/47892-que-es-el-testing/'
-          tab.url.includes('platzi.com/clases/') ? true : false;
+        tabIsActive = tab.url.includes(paths.rootUrl + paths.lessonUrl)
+          ? true
+          : false;
       }
     }
 
     if (!tabIsActive) {
       browser.tabs.create({
-        url: 'https://platzi.com/clases/2920-javascript-testing/47892-que-es-el-testing/',
+        url: paths.rootUrl + paths.lessonUrl + paths.testLessonUrl,
       });
     }
 
@@ -33,7 +40,7 @@ function openMyPage() {
 openMyPage();
 
 dataForLesson = {};
-updateTimeStamp = '';
+updateTimeStamp = "";
 
 function currentTime() {
   let time = Date.now();
@@ -49,18 +56,18 @@ function getHoursMinutesSeconds(time) {
   ]);
 
   let validateHoursMinutesSeconds = hoursMinutesSeconds.map((element) => {
-    let validation = '0';
+    let validation = "0";
     return element.length < 2 ? validation.concat(element) : element;
   });
 
-  return validateHoursMinutesSeconds.join(':');
+  return validateHoursMinutesSeconds.join(":");
 }
 
 function splitTime(time) {
-  let timeSplit = time.split(':');
+  let timeSplit = time.split(":");
   switch (timeSplit.length) {
     case 2:
-      timeSplit.unshift('00');
+      timeSplit.unshift("00");
       break;
 
     case 3:
@@ -71,7 +78,7 @@ function splitTime(time) {
       break;
   }
 
-  let dateFromBegin = new Date('1/1/1970 00:00:00');
+  let dateFromBegin = new Date("1/1/1970 00:00:00");
   dateFromBegin.setHours(
     parseInt(timeSplit[0]),
     parseInt(timeSplit[1]),
@@ -84,25 +91,24 @@ function splitTime(time) {
 
 (() => {
   function notifyExtension(e) {
-    console.log(e);
-
+    //console.log(e);
+    //console.log(e.target.id);
     if (e) {
-      console.log('hi');
       switch (e.target.id) {
-        case 'start_lesson-update-button':
+        case "start_lesson-update-button":
           dataForLesson.updateTime =
-            document.getElementById('start_lesson').value;
+            document.getElementById("start_lesson").value;
           break;
-        case 'end_lesson-update-button':
+        case "end_lesson-update-button":
           dataForLesson.updateTime =
-            document.getElementById('end_lesson').value;
+            document.getElementById("end_lesson").value;
           break;
-        case 'end_comments-update-button':
+        case "end_comments-update-button":
           dataForLesson.updateTime =
-            document.getElementById('end_comments').value;
+            document.getElementById("end_comments").value;
           break;
-        case 'comments-update-button':
-          dataForLesson.comments = document.getElementById('comments').value;
+        case "comments-update-button":
+          dataForLesson.comments = document.getElementById("comments").value;
           break;
         default:
           break;
@@ -112,28 +118,28 @@ function splitTime(time) {
     browser.runtime.sendMessage(
       { method: e.target.id, dataForLesson, currentUrl },
       function (res) {
-        //console.log(res.data);
+        //console.log(res);
         dataForLesson = res.data;
 
-        document.getElementById('course').value = dataForLesson.course;
-        document.getElementById('lesson').value = dataForLesson.lesson;
+        document.getElementById("course").value = dataForLesson.course;
+        document.getElementById("lesson").value = dataForLesson.lesson;
 
-        document.getElementById('duration_video').value =
+        document.getElementById("duration_video").value =
           getHoursMinutesSeconds(dataForLesson.durationVideo);
 
-        document.getElementById('start_lesson').value = getHoursMinutesSeconds(
+        document.getElementById("start_lesson").value = getHoursMinutesSeconds(
           dataForLesson.startLesson
         );
 
-        document.getElementById('end_lesson').value = getHoursMinutesSeconds(
+        document.getElementById("end_lesson").value = getHoursMinutesSeconds(
           dataForLesson.endLesson
         );
 
-        document.getElementById('end_comments').value = getHoursMinutesSeconds(
+        document.getElementById("end_comments").value = getHoursMinutesSeconds(
           dataForLesson.endComments
         );
 
-        document.getElementById('comments').value = dataForLesson.comments;
+        document.getElementById("comments").value = dataForLesson.comments;
 
         return true;
       }
@@ -141,48 +147,48 @@ function splitTime(time) {
   }
 
   document
-    .getElementById('platzi-button')
-    .addEventListener('click', notifyExtension);
+    .getElementById("platzi-button")
+    .addEventListener("click", notifyExtension);
 
   document
-    .getElementById('duration_video-update-button')
-    .addEventListener('click', notifyExtension);
+    .getElementById("duration_video-update-button")
+    .addEventListener("click", notifyExtension);
 
   document
-    .getElementById('startLesson-button')
-    .addEventListener('click', notifyExtension);
+    .getElementById("startLesson-button")
+    .addEventListener("click", notifyExtension);
 
   document
-    .getElementById('start_lesson-update-button')
-    .addEventListener('click', notifyExtension);
+    .getElementById("start_lesson-update-button")
+    .addEventListener("click", notifyExtension);
 
   document
-    .getElementById('endLesson-button')
-    .addEventListener('click', notifyExtension);
+    .getElementById("endLesson-button")
+    .addEventListener("click", notifyExtension);
 
   document
-    .getElementById('end_lesson-update-button')
-    .addEventListener('click', notifyExtension);
+    .getElementById("end_lesson-update-button")
+    .addEventListener("click", notifyExtension);
 
   document
-    .getElementById('endComments-button')
-    .addEventListener('click', notifyExtension);
+    .getElementById("endComments-button")
+    .addEventListener("click", notifyExtension);
 
   document
-    .getElementById('end_comments-update-button')
-    .addEventListener('click', notifyExtension);
+    .getElementById("end_comments-update-button")
+    .addEventListener("click", notifyExtension);
 
   document
-    .getElementById('comments-update-button')
-    .addEventListener('click', notifyExtension);
+    .getElementById("comments-update-button")
+    .addEventListener("click", notifyExtension);
 
   document
-    .getElementById('test-button')
-    .addEventListener('click', notifyExtension);
+    .getElementById("test-button")
+    .addEventListener("click", notifyExtension);
 
   document
-    .getElementById('save-button')
-    .addEventListener('click', notifyExtension);
+    .getElementById("save-button")
+    .addEventListener("click", notifyExtension);
 
   // notifyExtension(e);
 
@@ -295,14 +301,11 @@ function splitTime(time) {
   // })();
 
   function init() {
-    // let currentUrl = openMyPage();
-    // console.log(currentUrl);
-    started = { target: { id: 'platzi-button' } };
-    // console.log(started.target);
+    started = { target: { id: "platzi-button" } };
     getCurrentWindowTabsA().then((res, rej) => {
       tabs = res;
       tabActive = tabs.find((element) => element.active === true);
-      currentUrl = tabActive.url.replace('https://platzi.com/clases', '');
+      currentUrl = tabActive.url.replace(paths.rootUrl + paths.lessonUrl, "");
       started.target.test = currentUrl;
       notifyExtension(started);
     });
